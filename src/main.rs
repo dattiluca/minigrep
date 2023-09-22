@@ -1,9 +1,7 @@
 use std::env;
-// questa libreria ci permette di passare
-// argomenti al programma
+use std::process;
 
-use std::fs;
-// libreria per lettura/scrittura file
+use minigrep::Config;
 
 fn main() {
     
@@ -21,28 +19,24 @@ fn main() {
 
 // salviamo gli argomenti passati
     
-    let config = Config::new(&args);
+    let config = Config::build(&args)
+        .unwrap_or_else(|err| {
+
+        //Using unwrap_or_else allows us to define some custom, non-panic! error handling, instead of a simple panic!
+            println!("Problem parsing arguments: {err}");
+            process::exit(1);
+        });
+
 
     println!("Searching for {} in file {}",config.query,config.file_path);
 
     println!("In file {}",config.file_path);
 
-    let contents = fs::read_to_string(config.file_path)
-        .expect("Should have been able to read the file");
-
-    println!("With text:\n{contents}");
-}
-
-struct Config {
-    query: String,
-    file_path: String,
-}
-
-impl Config {
-    fn new(args: &[String]) -> Config {
-        let query = args[1].clone();
-        let file_path = args[2].clone();
-
-        Config{ query, file_path}
+    if let  Err(e) = minigrep::run(config) {
+        println!("Application Errore {e}");
+        process::exit(1);
     }
+
+
 }
+
