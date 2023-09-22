@@ -21,7 +21,7 @@ fn main() {
 
 // salviamo gli argomenti passati
     
-    let config = parse_config(&args);
+    let config = Config::new(&args);
 
     println!("Searching for {} in file {}",config.query,config.file_path);
 
@@ -38,21 +38,11 @@ struct Config {
     file_path: String,
 }
 
-fn parse_config(args: &[String]) -> Config {
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let file_path = args[2].clone();
 
-
-/*
- The args variable in main is the owner of the argument values and is only
-  letting the parse_config function borrow them, which means we’d violate Rust’s 
-  borrowing rules if Config tried to take ownership of the values in args.
-*/
-    let query= args[1].clone();
-    let file_path = args[2].clone();
-/*
-here are a number of ways we could manage the String data; the easiest,
-though somewhat inefficient, route is to call the clone method on the values. 
-This will make a full copy of the data for the Config instance to own,
-which takes more time and memory than storing a reference to the string data
-*/
-    Config { query, file_path}
+        Config{ query, file_path}
+    }
 }
