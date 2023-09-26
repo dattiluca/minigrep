@@ -1,7 +1,40 @@
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "RUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
+    }
+}
+
 use std::env;
 use std::process;
 
 use minigrep::Config;
+use minigrep::search;
+use minigrep::search_case_insensitive;
 
 fn main() {
     
@@ -28,9 +61,6 @@ fn main() {
         });
 
 
-    println!("Searching for {} in file {}",config.query,config.file_path);
-
-    println!("In file {}",config.file_path);
 
     if let  Err(e) = minigrep::run(config) {
         println!("Application Error: {e}");
