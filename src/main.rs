@@ -56,14 +56,14 @@ fn main() {
         .unwrap_or_else(|err| {
 
         //Using unwrap_or_else allows us to define some custom, non-panic! error handling, instead of a simple panic!
-            println!("Problem parsing arguments: {err}");
+            eprintln!("Problem parsing arguments: {err}");
             process::exit(1); // l'exit code 1 è uno dei modi per comunicare termine programma con problemi
         });
 
 
 
     if let  Err(e) = minigrep::run(config) {
-        println!("Application Error: {e}");
+        eprintln!("Application Error: {e}");
         process::exit(1);
     }
 
