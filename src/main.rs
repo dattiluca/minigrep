@@ -52,14 +52,10 @@ fn main() {
 
 // salviamo gli argomenti passati
     
-    let config = Config::build(&args)
-        .unwrap_or_else(|err| {
-
-        //Using unwrap_or_else allows us to define some custom, non-panic! error handling, instead of a simple panic!
-            eprintln!("Problem parsing arguments: {err}");
-            process::exit(1); // l'exit code 1 è uno dei modi per comunicare termine programma con problemi
-        });
-
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
 
 
     if let  Err(e) = minigrep::run(config) {
